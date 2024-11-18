@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caleb Müsfeldt</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .section {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dot-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .first-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .name-container {
+            position: relative;
+            text-align: center;
+            z-index: 3;
+            mix-blend-mode: difference;
+        }
+
+        .first-name {
+            font-size: 25vw;
+            line-height: 1;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2vh;
+        }
+
+        .last-name {
+            font-size: 15vw;
+            line-height: 1.1;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .letter {
+            display: inline-block;
+        }
+
+        .menu-section {
+            background: rgba(255, 255, 255, 0.05);
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            backdrop-filter: none;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem;
+            max-width: 400px;
+            width: 90%;
+            padding: 2rem;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+            transform: translateY(-3px);
+        }
+
+        .visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="dot-canvas" id="dotCanvas"></canvas>
+    
+    <section class="section first-section">
+        <div class="name-container">
+            <div class="first-name">
+                <span class="letter">C</span>
+                <span class="letter">A</span>
+                <span class="letter">L</span>
+                <span class="letter">E</span>
+                <span class="letter">B</span>
+            </div>
+            <div class="last-name">
+                <span class="letter">M</span>
+                <span class="letter">Ü</span>
+                <span class="letter">S</span>
+                <span class="letter">F</span>
+                <span class="letter">E</span>
+                <span class="letter">L</span>
+                <span class="letter">D</span>
+                <span class="letter">T</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section menu-section">
+        <div class="menu-grid">
+            <button onclick="window.location.href='/about'" class="menu-item">About</button>
+            <button onclick="window.location.href='/research'" class="menu-item">Research</button>
+            <button onclick="window.location.href='/art'" class="menu-item">Art</button>
+            <button onclick="window.location.href='/github'" class="menu-item">GitHub</button>
+            <button onclick="window.location.href='/contact'" class="menu-item">Contact</button>
+        </div>
+    </section>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuSection = document.querySelector('.menu-section');
+            const canvas = document.getElementById('dotCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let time = 0;
+            let dots = [];
+            let animationFrameId;
+            const DOT_RADIUS = 3;
+            const DOT_SPACING = 10;
+            const FLOW_SPEED = 0.01;
+            const FLOW_SCALE = 0.025;
+
+            class Dot {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.originalX = x;
+                    this.originalY = y;
+                    this.size = DOT_RADIUS;
+                }
+
+                update(time) {
+                    const noiseX = Math.sin(this.originalX * FLOW_SCALE + time * FLOW_SPEED) * 
+                                 Math.cos(this.originalY * FLOW_SCALE + time * FLOW_SPEED * 0.5) * 8;
+                    const noiseY = Math.cos(this.originalX * FLOW_SCALE + time * FLOW_SPEED * 0.7) * 
+                                 Math.sin(this.originalY * FLOW_SCALE + time * FLOW_SPEED) * 8;
+
+                    this.x = this.originalX + noiseX;
+                    this.y = this.originalY + noiseY;
+
+                    const intensity = (Math.sin(this.x * FLOW_SCALE + time * FLOW_SPEED) + 
+                                    Math.cos(this.y * FLOW_SCALE + time * FLOW_SPEED)) * 0.5;
+                    
+                    this.size = DOT_RADIUS * (1 + intensity * 0.5);
+                }
+
+                draw(ctx) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initDots() {
+                dots = [];
+                for(let x = 0; x < canvas.width; x += DOT_SPACING) {
+                    for(let y = 0; y < canvas.height; y += DOT_SPACING) {
+                        dots.push(new Dot(x, y));
+                    }
+                }
+            }
+
+            function resizeCanvas() {
+                // Cancel previous animation frame to prevent memory leaks
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                
+                // Set canvas dimensions to match window size
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight * 1.1; // Add 10% extra height to prevent gap
+                
+                // Reinitialize dots and restart animation
+                initDots();
+                animate();
+            }
+
+            function animate() {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#fff';
+                time += 1;
+
+                dots.forEach(dot => {
+                    dot.update(time);
+                    dot.draw(ctx);
+                });
+
+                animationFrameId = requestAnimationFrame(animate);
+            }
+
+            // Initialize and handle resize
+            resizeCanvas();
+            
+            // Debounce resize handler
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(resizeCanvas, 250);
+            });
+
+            // Scroll handling
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                if (scrollPosition > window.innerHeight * 0.2) {
+                    menuSection.classList.add('visible');
+                } else {
+                    menuSection.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
