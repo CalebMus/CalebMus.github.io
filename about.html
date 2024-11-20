@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Caleb Müsfeldt</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
         body, html {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: #000;
             color: #fff;
             line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 120px; /* Space for footer */
         }
 
         .container {
@@ -38,57 +43,86 @@
             margin-top: 1rem;
         }
 
-        .back-to-menu {
-            margin-top: 3rem;
-            padding: 2rem;
-            font-size: 1.2rem;
-            color: #ffffff;
-            background-color: transparent;
-            border: 2px solid #ffffff;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        .footer {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            width: 90%;
+            max-width: 600px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
         }
 
-        .back-to-menu:hover {
-            background-color: #ffffff;
-            color: #000;
+        .menu-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            text-align: center;
+            font-size: 1rem;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 1);
             box-shadow: 0 0 20px rgba(255, 255, 255, 1);
             transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            body {
+                padding-bottom: 180px; /* More space for footer on mobile */
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>About Caleb Müsfeldt</h1>
-
-        <section>
-            <h2>General / Research</h2>
             <p>
-                I am a data scientist with a focus on artificial intelligence and cognitive science. I am driven by a deep passion for developing AI that can think, reason, and learn in ways that reflect human intelligence. My research experience spans applied math, algorithm design, neuroscience, cognitive science, and LLMs.
+                I am 23 years old by way of Phoenix, Arizona. Some random things I enjoy talking about (besides what you’ll find on this website) are consciousness, Albert Camus/absurdism, and the Phoenix Suns.
             </p>
+        <section>
+            <h2>Scientific Philosophy</h2>
             <p>
-                I plan to start a PhD program in 2025 where my goal is to develop neural network architectures with the capabilities of causal reasoning, out-of-distribution generalizations, and intuitive physics. My career will be devoted to making lasting contributions to the fields of human and machine intelligence.
+                This should and will evolve as I continue to learn and develop my skills. Currently, and without discussing my specific work, it is rooted in a synthesis of curiosity, pragmatism, and a desire for transformative impact. I approach science as a means of uncovering the "how" and "why" behind complex systems, with a deep respect for knowledge as an intrinsic good. I dislike rigid disciplinary boundaries and believe breakthroughs emerge at the intersections of fields and thoughts. Curiosity should be expansive, but balanced by pragmatic optimism, as science pursues actionable goals with real-world constraints in mind. I believe science should be driven by a child-like wonder, guided by the maturity and rigor of sophisticated methods. And open science is the best!
             </p>
         </section>
 
         <section>
-            <h2>Art</h2>
+            <h2>Artistic Philosophy</h2>
             <p>
-                I create visual and audio reactive digital art with TouchDesigner where I aim for nothing more than achieving an aesthetic that is a satisfactory blend of psychedelia and technocore using mathematical ideas.
-            </p>
-            <p>
-                My writings have much more intellectual motivation. The genres span from philosophical essays to fictional short stories. Some topics and themes of interest are science fiction, horror, absurdism, avant-garde, postmodernism, and consciousness.
+                Art is everything science is not, the best art inspires the best science (with room for the reverse to be true as well).
             </p>
         </section>
+    </div>
 
-        <!-- Button to go back to the menu -->
-        <a href="index.html#menu">
-            <button class="back-to-menu">Back to Menu</button>
-        </a>
+    <div class="footer">
+        <button onclick="window.location.href='index.html'" class="menu-item">Home</button>
+        <button onclick="window.location.href='/research'" class="menu-item">Research</button>
+        <button onclick="window.location.href='/art'" class="menu-item">Art</button>
+        <a href="https://github.com/CalebMus" target="_blank" class="menu-item">GitHub</a>
+        <button onclick="window.location.href='/contact'" class="menu-item">Contact</button>
     </div>
 
 </body>
