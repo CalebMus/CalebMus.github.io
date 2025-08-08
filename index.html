@@ -1,242 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleb Müsfeldt</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Caleb Müsfeldt</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#003bff;
+      --cyan:#66e4ff;
+      --yellow:#ffc800;
+    }
+    html,body{height:100%;margin:0;background:var(--blue);overflow:hidden;}
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            background-color: #000;
-            color: #fff;
-        }
+    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(2px) contrast(1.05) saturate(1.1);} /* low-res CRT blur */
 
-        .section {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    /* Pixelated CRT overlay */
+    .crt{position:absolute;inset:0;pointer-events:none;z-index:5;}
+    .crt::before{
+      content:"";position:absolute;inset:0;
+      background:repeating-linear-gradient(to bottom,
+        rgba(0,0,0,0.12) 0px,
+        rgba(0,0,0,0.12) 2px,
+        rgba(255,255,255,0.06) 3px,
+        rgba(255,255,255,0.06) 4px);
+      opacity:.35;mix-blend-mode:multiply;animation:rows 9s linear infinite;
+    }
+    .crt::after{
+      content:"";position:absolute;inset:-10%;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .05 .12 .08"/></feComponentTransfer></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+      opacity:.25;mix-blend-mode:soft-light;animation:grain 3s steps(5,end) infinite;
+      box-shadow: inset 140px 0 180px rgba(0,0,0,.25), inset -140px 0 180px rgba(0,0,0,.25);
+    }
+    @keyframes grain{from{transform:translate(-2%,-2%);} to{transform:translate(2%,2%);} }
+    @keyframes rows{0%{transform:translateY(-1%);}100%{transform:translateY(1%);} }
 
-        .dot-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0.9;
-        }
+    .menu{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;padding-left:5%;font-family:"VCR OSD Mono","VT323",monospace;letter-spacing:2px;user-select:none;text-align:left;z-index:10;}
 
-        .name-container {
-            position: relative;
-            text-align: center;
-            z-index: 3;
-            mix-blend-mode: difference;
-            transform: translateY(-5vh);
-        }
+    ul{list-style:none;padding:0;margin:0;font-size:clamp(40px, 7.8vw, 82px);line-height:1.2;text-transform:uppercase;}
+    li{
+      color:var(--cyan);
+      white-space:pre;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    }
+    li[aria-current="true"]{
+      color:var(--yellow);
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0 0 10px rgba(255,200,0,.3),
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    }
 
-        .first-name {
-            font-size: 25vw;
-            line-height: 1;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2vh;
-        }
+    .cursor{
+      display:inline-block;
+      width:1ch;
+      margin-right:.4ch;
+      color:var(--yellow);
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    } 
+    .cursor::before{content:">";} 
 
-        .last-name {
-            font-size: 15vw;
-            line-height: 1.1;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
+    #menuList:focus, *:focus{outline:none;}
 
-        .letter {
-            display: inline-block;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            width: 90%;
-            max-width: 600px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-
-        .menu-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1rem;
-            text-align: center;
-            font-size: 1rem;
-            text-decoration: none;
-            color: rgb(0, 0, 0);
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+    /* Touch controls */
+    .touch{position:absolute;left:0;width:100%;z-index:15;}
+    .touch.up{top:0;height:34%;}
+    .touch.enter{top:34%;height:32%;}
+    .touch.down{bottom:0;height:34%;}
+    .touch{background:transparent;}
+    @media (pointer: coarse){
+      .touch::after{content:attr(data-label); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:"VT323", monospace; font-size:clamp(14px,3.5vw,22px); color:rgba(255,255,255,.5);} 
+      .touch.up::after{content:"UP";}
+      .touch.enter::after{content:"ENTER";}
+      .touch.down::after{content:"DOWN";}
+    }
+  </style>
 </head>
 <body>
-    <canvas class="dot-canvas" id="dotCanvas"></canvas>
-    
-    <section class="section">
-        <div class="name-container">
-            <div class="first-name">
-                <span class="letter">C</span>
-                <span class="letter">A</span>
-                <span class="letter">L</span>
-                <span class="letter">E</span>
-                <span class="letter">B</span>
-            </div>
-            <div class="last-name">
-                <span class="letter">M</span>
-                <span class="letter">Ü</span>
-                <span class="letter">S</span>
-                <span class="letter">F</span>
-                <span class="letter">E</span>
-                <span class="letter">L</span>
-                <span class="letter">D</span>
-                <span class="letter">T</span>
-            </div>
-        </div>
-        <div class="footer">
-            <button onclick="window.location.href='about.html'" class="menu-item">About</button>
-            <button onclick="window.location.href='research.html'" class="menu-item">Research</button>
-            <button onclick="window.location.href='art.html'" class="menu-item">Art</button>
-            <a href="https://github.com/CalebMus" target="_blank" class="menu-item">GitHub</a>
-            <button onclick="window.location.href='contact.html'" class="menu-item">Contact</button>
-        </div>
-    </section>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('dotCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            let time = 0;
-            let dots = [];
-            let animationFrameId;
-            const DOT_RADIUS = 3;
-            const DOT_SPACING = 10;
-            const FLOW_SPEED = 0.01;
-            const FLOW_SCALE = 0.025;
+  <div class="screen" role="application" aria-label="TV menu">
+    <div class="menu">
+      <ul id="menuList" tabindex="0" aria-live="polite"></ul>
+    </div>
+    <div class="touch up" role="button" aria-label="Up"></div>
+    <div class="touch enter" role="button" aria-label="Enter"></div>
+    <div class="touch down" role="button" aria-label="Down"></div>
+    <div class="crt" aria-hidden="true"></div>
+  </div>
+  <script>
+    const ITEMS = [
+      { label: "CALEB MÜSFELDT", static: true },
+      { label: "About",   href: "about.html" },
+      { label: "Research",href: "research.html" },
+      { label: "Art",     href: "art.html" },
+      { label: "GitHub",  href: "https://github.com/CalebMus", external: true },
+      { label: "Contact", href: "contact.html" }
+    ];
 
-            class Dot {
-                constructor(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.originalX = x;
-                    this.originalY = y;
-                    this.size = DOT_RADIUS;
-                }
+    const ul = document.getElementById('menuList');
+    let index = 1;
 
-                update(time) {
-                    const noiseX = Math.sin(this.originalX * FLOW_SCALE + time * FLOW_SPEED) * 
-                                 Math.cos(this.originalY * FLOW_SCALE + time * FLOW_SPEED * 0.5) * 8;
-                    const noiseY = Math.cos(this.originalX * FLOW_SCALE + time * FLOW_SPEED * 0.7) * 
-                                 Math.sin(this.originalY * FLOW_SCALE + time * FLOW_SPEED) * 8;
+    function render(){
+      ul.innerHTML = "";
+      ITEMS.forEach((item,i)=>{
+        const li=document.createElement('li');
+        if(item.static){
+          const cursor=document.createElement('span');
+          cursor.className='cursor';
+          cursor.style.visibility='hidden';
+          li.appendChild(cursor);
+          li.appendChild(document.createTextNode(item.label));
+        }else{
+          li.setAttribute('aria-current', i===index);
+          const cursor=document.createElement('span');
+          cursor.className='cursor';
+          cursor.style.visibility = i===index ? 'visible' : 'hidden';
+          li.appendChild(cursor);
+          li.appendChild(document.createTextNode(item.label));
+        }
+        ul.appendChild(li);
+      });
+    }
 
-                    this.x = this.originalX + noiseX;
-                    this.y = this.originalY + noiseY;
+    function navigate(delta){
+      index = ((index - 1 + delta + (ITEMS.length - 1)) % (ITEMS.length - 1)) + 1;
+      render();
+    }
 
-                    const intensity = (Math.sin(this.x * FLOW_SCALE + time * FLOW_SPEED) + 
-                                    Math.cos(this.y * FLOW_SCALE + time * FLOW_SPEED)) * 0.5;
-                    
-                    this.size = DOT_RADIUS * (1 + intensity * 0.5);
-                }
+    function activate(){
+      const item = ITEMS[index];
+      if(!item || item.static) return;
+      if(item.external){ window.open(item.href, '_blank', 'noopener'); }
+      else{ window.location.href = item.href; }
+    }
 
-                draw(ctx) {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
+    document.addEventListener('keydown', e=>{
+      switch(e.key){
+        case 'ArrowUp': e.preventDefault(); navigate(-1); break;
+        case 'ArrowDown': e.preventDefault(); navigate(1); break;
+        case 'Enter': e.preventDefault(); activate(); break;
+      }
+    });
 
-            function initDots() {
-                dots = [];
-                for(let x = 0; x < canvas.width; x += DOT_SPACING) {
-                    for(let y = 0; y < canvas.height; y += DOT_SPACING) {
-                        dots.push(new Dot(x, y));
-                    }
-                }
-            }
+    const addTap = (selector, handler)=>{
+      const el = document.querySelector(selector);
+      if(!el) return;
+      const fn = (ev)=>{ ev.preventDefault(); handler(); };
+      el.addEventListener('touchstart', fn, {passive:false});
+      el.addEventListener('click', fn);
+    };
+    addTap('.touch.up', ()=>navigate(-1));
+    addTap('.touch.down', ()=>navigate(1));
+    addTap('.touch.enter', ()=>activate());
 
-            function resizeCanvas() {
-                if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId);
-                }
-                
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                initDots();
-                animate();
-            }
-
-            function animate() {
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = '#fff';
-                time += 1;
-
-                dots.forEach(dot => {
-                    dot.update(time);
-                    dot.draw(ctx);
-                });
-
-                animationFrameId = requestAnimationFrame(animate);
-            }
-
-            resizeCanvas();
-            
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(resizeCanvas, 250);
-            });
-        });
-    </script>
+    render();
+    ul.focus();
+  </script>
 </body>
 </html>
