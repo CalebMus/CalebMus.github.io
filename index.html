@@ -13,7 +13,7 @@
     }
     html,body{height:100%;margin:0;background:var(--blue);overflow:hidden;}
 
-    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(2px) contrast(1.05) saturate(1.1);} /* low-res CRT blur */
+    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(1.2px) contrast(1.05) saturate(1.1);} /* low-res CRT blur */
 
     /* Pixelated CRT overlay */
     .crt{position:absolute;inset:0;pointer-events:none;z-index:5;}
@@ -24,7 +24,7 @@
         rgba(0,0,0,0.12) 2px,
         rgba(255,255,255,0.06) 3px,
         rgba(255,255,255,0.06) 4px);
-      opacity:.35;mix-blend-mode:multiply;animation:rows 9s linear infinite;
+      opacity:.55;mix-blend-mode:multiply;animation:rows 9s linear infinite;
     }
     .crt::after{
       content:"";position:absolute;inset:-10%;
@@ -90,6 +90,21 @@
       .touch.enter::after{content:"ENTER";}
       .touch.down::after{content:"DOWN";}
     }
+
+    /* Info box */
+    .info-box{
+      position:absolute;
+      bottom:1rem;
+      right:1rem;
+      background:rgba(0,0,0,0.65);
+      border:2px solid var(--cyan);
+      padding:0.5rem 1rem;
+      font-family:"VCR OSD Mono","VT323",monospace;
+      color:var(--cyan);
+      font-size:clamp(12px,2vw,16px);
+      text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;
+      z-index:20;
+    }
   </style>
 </head>
 <body>
@@ -100,6 +115,7 @@
     <div class="touch up" role="button" aria-label="Up"></div>
     <div class="touch enter" role="button" aria-label="Enter"></div>
     <div class="touch down" role="button" aria-label="Down"></div>
+    <div class="info-box">Use the Up, Down, and Enter/Return keys to navigate.</div>
     <div class="crt" aria-hidden="true"></div>
   </div>
   <script>
