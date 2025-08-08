@@ -16,8 +16,8 @@
 
     h1,h2,p{margin:0 0 1rem 0;font-size:clamp(16px,2.6vw,22px);color:inherit;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,2px 2px 1px rgba(0,0,0,.6)} 
 
-    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;}
-    .bottom-menu .bar{position:relative;padding:.6rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
+    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;filter:blur(1px) contrast(1.05) saturate(1.1);}
+    .bottom-menu .bar{position:relative;padding:.4rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
     .bottom-menu ul{display:flex;gap:1.2rem;align-items:center;justify-content:center;list-style:none;margin:0;padding:0;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase;font-size:clamp(14px,2.6vw,20px);line-height:1.2}
     .bottom-menu li{color:var(--cyan);white-space:pre;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
     .bottom-menu li[aria-current="true"]{color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 0 10px rgba(255,200,0,.3)}
@@ -49,18 +49,23 @@
         <p>Art is everything science is not, the best art inspires the best science (with room for the reverse to be true as well).</p>
       </main>
     </div>
-
-    <nav class="bottom-menu" aria-label="Site menu">
-      <div class="bar">
-        <ul id="aboutMenu" tabindex="0" aria-live="polite"></ul>
-      </div>
-    </nav>
-
-    <div class="touchbar" aria-hidden="false">
-      <div class="left" role="button" aria-label="Previous"></div>
       <div class="middle" role="button" aria-label="Enter"></div>
       <div class="right" role="button" aria-label="Next"></div>
     </div>
+  </div>
+
+  <!-- Fixed bottom CRT menu (outside blurred .screen so it stays pinned) -->
+  <nav class="bottom-menu" aria-label="Site menu">
+    <div class="bar">
+      <ul id="aboutMenu" tabindex="0" aria-live="polite"></ul>
+    </div>
+  </nav>
+
+  <!-- Fixed touch navigation for mobile -->
+  <div class="touchbar" aria-hidden="false">
+    <div class="left" role="button" aria-label="Previous"></div>
+    <div class="middle" role="button" aria-label="Enter"></div>
+    <div class="right" role="button" aria-label="Next"></div>
   </div>
 
   <script>
