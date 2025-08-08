@@ -7,9 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     :root{ --blue:#003bff; --cyan:#66e4ff; --yellow:#ffc800; }
-    html,body{margin:0;background:var(--blue);overflow-x:hidden;color:var(--cyan);} 
+    html,body{height:100%;margin:0;background:var(--blue);overflow-x:hidden;color:var(--cyan);} 
 
-    .screen{position:relative;min-height:100%;filter:blur(1px) contrast(1.05) saturate(1.1);} 
+    .screen{position:fixed;inset:0;overflow:auto;filter:blur(1px) contrast(1.05) saturate(1.1);}  
 
     .wrap{position:relative;z-index:1;display:flex;justify-content:flex-start}
     .content{max-width:900px;padding:6rem 5% 12rem 5%;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase}
@@ -18,7 +18,7 @@
     a{color:var(--yellow);text-decoration:none}
     a:hover,a:focus{text-decoration:underline;outline:none}
 
-    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;filter:blur(1px) contrast(1.05) saturate(1.1);} 
+    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;} 
     .bottom-menu .bar{position:relative;padding:.6rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
     .bottom-menu ul{display:flex;gap:1.2rem;align-items:center;justify-content:center;list-style:none;margin:0;padding:0;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase;font-size:clamp(14px,2.6vw,20px);line-height:1.2}
     .bottom-menu li{color:var(--cyan);white-space:pre;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
@@ -42,7 +42,38 @@
     <div class="wrap">
       <main class="content">
         <h1>Research</h1>
-        <p>I am currently working in the Cognitive Data Science Lab under Dr. Derek Powell where my research focuses on understanding and improving the reasoning processes of large language models (LLMs) by examining representations and taxonomic relationships...</p>
+        <p>I am currently working in the Cognitive Data Science Lab under Dr. Derek Powell where my research focuses on understanding and improving the reasoning processes of large language models (LLMs) by examining representations and taxonomic relationships. I leverage techniques like model editing to assess how interventions, such as injecting counterfactual data or manipulating logits, influence a model's performance and interpretability. More broadly, my research interests lie at the intersection of cognitive science, computational neuroscience, and artificial intelligence (AI). I aim to understand how the brain gives rise to metacognition capabilities and use this understanding to advance AI’s capabilities. I am pursuing projects in intuitive physics, causal learning, vision systems, and LLMs.</p>
+
+        <h2>Papers</h2>
+        <div class="paper">
+          <h3>Development of a Python-Based Software for Calculating the Jones Polynomial: Insights into the Behavior of Polymers and Biopolymers</h3>
+          <p>Honors Thesis</p>
+          <p>Director: Dr. Eleni Panagiotou | Committee Member: Dr. Andrea Richa</p>
+          <p><a href="https://arxiv.org/abs/2410.22652" target="_blank" rel="noopener">arXiv:2410.22652</a></p>
+        </div>
+
+        <h2>Presentations</h2>
+        <div class="presentation">
+          <h3>PTSD severity predicts improvements in psychological functioning after MDMA-assisted therapy</h3>
+          <p>Lifshitz, D., Balducci, J., Musfeldt, C., et al. (2024)</p>
+          <p>2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ</p>
+          <p class="award">Award: Most Interdisciplinary Research</p>
+        </div>
+
+        <div class="presentation">
+          <h3>The "High" road to drug education through social media</h3>
+          <p>Delight, C., Semple, M. G., Algibez Flores, B., et al. (2024)</p>
+          <p>2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ</p>
+          <p class="award">Award: Second Prize - Biology and Social Issues Category</p>
+          <p class="award">Award: Poster Title Award</p>
+        </div>
+
+        <div class="presentation">
+          <h3>PTSD severity predicts improvements in self-compassion scores following MDMA-assisted therapy</h3>
+          <p>Gupta, L., Semple, M. G., Algibez Flores, B., et al. (2024)</p>
+          <p>2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ</p>
+          <p class="award">Award: Third Prize - Neuroscience Category</p>
+        </div>
       </main>
     </div>
   </div>
