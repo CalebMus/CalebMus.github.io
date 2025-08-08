@@ -1,129 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Caleb Müsfeldt</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About – Caleb Müsfeldt</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root{ --blue:#003bff; --cyan:#66e4ff; --yellow:#ffc800; }
+    html,body{height:100%;margin:0;background:var(--blue);overflow-x:hidden;color:var(--cyan);} 
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            color: #fff;
-            line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            padding-bottom: 120px; /* Space for footer */
-        }
+    .screen{position:fixed;inset:0;overflow:auto;filter:blur(1px) contrast(1.05) saturate(1.1);} 
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-        }
+    .wrap{position:relative;z-index:1;display:flex;justify-content:flex-start}
+    .content{max-width:900px;padding:6rem 5% 12rem 5%;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase}
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #ffffff;
-        }
+    h1,h2,p{margin:0 0 1rem 0;font-size:clamp(16px,2.6vw,22px);color:inherit;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,2px 2px 1px rgba(0,0,0,.6)} 
 
-        h2 {
-            font-size: 2rem;
-            color: #ffffff;
-            margin-top: 2rem;
-        }
+    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;}
+    .bottom-menu .bar{position:relative;padding:.6rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
+    .bottom-menu ul{display:flex;gap:1.2rem;align-items:center;justify-content:center;list-style:none;margin:0;padding:0;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase;font-size:clamp(14px,2.6vw,20px);line-height:1.2}
+    .bottom-menu li{color:var(--cyan);white-space:pre;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
+    .bottom-menu li[aria-current="true"]{color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 0 10px rgba(255,200,0,.3)}
+    .bottom-menu .cursor{display:inline-block;width:1ch;margin-right:.4ch;color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
+    .bottom-menu .cursor::before{content:">"}
+    .bottom-menu [tabindex]{outline:none}
 
-        p {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            width: 90%;
-            max-width: 600px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-
-        .menu-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1rem;
-            text-align: center;
-            font-size: 1rem;
-            text-decoration: none;
-            color: rgb(0, 0, 0);
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            body {
-                padding-bottom: 180px; /* More space for footer on mobile */
-            }
-        }
-    </style>
+    .touchbar{position:fixed;left:0;right:0;bottom:0;height:28%;z-index:15;display:flex;}
+    .touchbar div{flex:1 1 0;background:transparent}
+    @media (pointer: coarse){
+      .touchbar div::after{content:attr(data-label);position:absolute;bottom:calc(28% + 0.6rem);left:50%;transform:translateX(-50%);font-family:"VT323",monospace;font-size:clamp(12px,3vw,16px);color:rgba(255,255,255,.45)}
+      .touchbar .left::after{content:"PREV"}
+      .touchbar .middle::after{content:"ENTER"}
+      .touchbar .right::after{content:"NEXT"}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>About Caleb Müsfeldt</h1>
-            <p>
-                I am 23 years old by way of Phoenix, Arizona. Some random things I enjoy talking about (besides what you’ll find on this website) are consciousness, Albert Camus/absurdism, and the Phoenix Suns.
-            </p>
-        <section>
-            <h2>Scientific Philosophy</h2>
-            <p>
-                This should and will evolve as I continue to learn and develop my skills. Currently, and without discussing my specific work, it is rooted in a synthesis of curiosity, pragmatism, and a desire for transformative impact. I approach science as a means of uncovering the "how" and "why" behind complex systems, with a deep respect for knowledge as an intrinsic good. I dislike rigid disciplinary boundaries and believe breakthroughs emerge at the intersections of fields and thoughts. Curiosity should be expansive, but balanced by pragmatic optimism, as science pursues actionable goals with real-world constraints in mind. I believe science should be driven by a child-like wonder, guided by the maturity and rigor of sophisticated methods. And open science is the best!
-            </p>
-        </section>
+  <div class="screen">
+    <div class="wrap">
+      <main class="content">
+        <h1>About</h1>
+        <p>I am 23 years old by way of Phoenix, Arizona. Some random things I enjoy talking about (besides what you’ll find on this website) are consciousness, Albert Camus/absurdism, and the Phoenix Suns.</p>
 
-        <section>
-            <h2>Artistic Philosophy</h2>
-            <p>
-                Art is everything science is not, the best art inspires the best science (with room for the reverse to be true as well).
-            </p>
-        </section>
+        <h2>Scientific Philosophy</h2>
+        <p>This should and will evolve as I continue to learn and develop my skills. Currently, and without discussing my specific work, it is rooted in a synthesis of curiosity, pragmatism, and a desire for transformative impact. I approach science as a means of uncovering the "how" and "why" behind complex systems, with a deep respect for knowledge as an intrinsic good. I dislike rigid disciplinary boundaries and believe breakthroughs emerge at the intersections of fields and thoughts. Curiosity should be expansive, but balanced by pragmatic optimism, as science pursues actionable goals with real-world constraints in mind. I believe science should be driven by a child-like wonder, guided by the maturity and rigor of sophisticated methods. And open science is the best!</p>
+
+        <h2>Artistic Philosophy</h2>
+        <p>Art is everything science is not, the best art inspires the best science (with room for the reverse to be true as well).</p>
+      </main>
     </div>
 
-    <div class="footer">
-        <button onclick="window.location.href='index.html'" class="menu-item">Home</button>
-        <button onclick="window.location.href='/research'" class="menu-item">Research</button>
-        <button onclick="window.location.href='/art'" class="menu-item">Art</button>
-        <a href="https://github.com/CalebMus" target="_blank" class="menu-item">GitHub</a>
-        <button onclick="window.location.href='/contact'" class="menu-item">Contact</button>
-    </div>
+    <nav class="bottom-menu" aria-label="Site menu">
+      <div class="bar">
+        <ul id="aboutMenu" tabindex="0" aria-live="polite"></ul>
+      </div>
+    </nav>
 
+    <div class="touchbar" aria-hidden="false">
+      <div class="left" role="button" aria-label="Previous"></div>
+      <div class="middle" role="button" aria-label="Enter"></div>
+      <div class="right" role="button" aria-label="Next"></div>
+    </div>
+  </div>
+
+  <script>
+    const ABOUT_ITEMS = [
+      { label: "Home", href: "index.html" },
+      { label: "Research", href: "research.html" },
+      { label: "Art", href: "art.html" },
+      { label: "GitHub", href: "https://github.com/CalebMus", external: true },
+      { label: "Contact", href: "contact.html" }
+    ];
+
+    const menuEl = document.getElementById('aboutMenu');
+    let menuIndex = 0;
+
+    function renderMenu(){
+      if(!menuEl) return;
+      menuEl.innerHTML = '';
+      ABOUT_ITEMS.forEach((item,i)=>{
+        const li = document.createElement('li');
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.style.visibility = (i===menuIndex ? 'visible' : 'hidden');
+        li.appendChild(cursor);
+        li.appendChild(document.createTextNode(item.label));
+        li.setAttribute('aria-current', i===menuIndex);
+        menuEl.appendChild(li);
+      });
+    }
+
+    function nav(delta){
+      menuIndex = ((menuIndex + delta + ABOUT_ITEMS.length) % ABOUT_ITEMS.length);
+      renderMenu();
+    }
+
+    function act(){
+      const item = ABOUT_ITEMS[menuIndex];
+      if(item.external) window.open(item.href,'_blank','noopener');
+      else window.location.href = item.href;
+    }
+
+    document.addEventListener('keydown', (e)=>{
+      switch(e.key){
+        case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); nav(-1); break;
+        case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nav(1); break;
+        case 'Enter': e.preventDefault(); act(); break;
+      }
+    });
+
+    const addTap = (selector, handler)=>{
+      const el = document.querySelector(selector);
+      if(!el) return;
+      const fn = (ev)=>{ ev.preventDefault(); handler(); };
+      el.addEventListener('touchstart', fn, {passive:false});
+      el.addEventListener('click', fn);
+    };
+    addTap('.touchbar .left', ()=>nav(-1));
+    addTap('.touchbar .right', ()=>nav(1));
+    addTap('.touchbar .middle', ()=>act());
+
+    renderMenu();
+    if(menuEl) menuEl.focus();
+  </script>
 </body>
 </html>
