@@ -1,150 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research – Caleb Müsfeldt</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root{ --blue:#003bff; --cyan:#66e4ff; --yellow:#ffc800; }
+    html,body{margin:0;background:var(--blue);overflow-x:hidden;color:var(--cyan);} 
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            color: #fff;
-            line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            padding-bottom: 120px; /* Space for footer */
-        }
+    .screen{position:relative;min-height:100%;filter:blur(1px) contrast(1.05) saturate(1.1);} 
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-        }
+    .wrap{position:relative;z-index:1;display:flex;justify-content:flex-start}
+    .content{max-width:900px;padding:6rem 5% 12rem 5%;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase}
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #ffffff;
-        }
+    h1,h2,h3,p,li{margin:0 0 1rem 0;font-size:clamp(16px,2.6vw,22px);color:inherit;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,2px 2px 1px rgba(0,0,0,.6)} 
+    a{color:var(--yellow);text-decoration:none}
+    a:hover,a:focus{text-decoration:underline;outline:none}
 
-        h2 {
-            font-size: 2rem;
-            color: #ffffff;
-            margin-top: 2rem;
-        }
+    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;filter:blur(1px) contrast(1.05) saturate(1.1);} 
+    .bottom-menu .bar{position:relative;padding:.6rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
+    .bottom-menu ul{display:flex;gap:1.2rem;align-items:center;justify-content:center;list-style:none;margin:0;padding:0;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase;font-size:clamp(14px,2.6vw,20px);line-height:1.2}
+    .bottom-menu li{color:var(--cyan);white-space:pre;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
+    .bottom-menu li[aria-current="true"]{color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 0 10px rgba(255,200,0,.3)}
+    .bottom-menu .cursor{display:inline-block;width:1ch;margin-right:.4ch;color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
+    .bottom-menu .cursor::before{content:">"}
+    .bottom-menu [tabindex]{outline:none}
 
-        p {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            width: 90%;
-            max-width: 600px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-
-        .menu-item {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1rem;
-            text-align: center;
-            font-size: 1rem;
-            text-decoration: none;
-            color: rgb(0, 0, 0);
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            body {
-                padding-bottom: 180px; /* More space for footer on mobile */
-            }
-        }
-    </style>
+    .touchbar{position:fixed;left:0;right:0;bottom:0;height:28%;z-index:15;display:flex;}
+    .touchbar div{flex:1 1 0;background:transparent}
+    @media (pointer: coarse){
+      .touchbar div::after{content:attr(data-label);position:absolute;bottom:calc(28% + 0.6rem);left:50%;transform:translateX(-50%);font-family:"VT323",monospace;font-size:clamp(12px,3vw,16px);color:rgba(255,255,255,.45)}
+      .touchbar .left::after{content:"PREV"}
+      .touchbar .middle::after{content:"ENTER"}
+      .touchbar .right::after{content:"NEXT"}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
+  <div class="screen">
+    <div class="wrap">
+      <main class="content">
         <h1>Research</h1>
-            <p>
-                I am currently working in the Cognitive Data Science Lab under Dr. Derek Powell where my research focuses on understanding and improving the reasoning processes of large language models (LLMs) by examining representations and taxonomic relationships. I leverage techniques like model editing to assess how interventions, such as injecting counterfactual data or manipulating logits, influence a model's performance and interpretability. More broadly, my research interests lie at the intersection of cognitive science, computational neuroscience, and artificial intelligence (AI). I aim to understand how the brain gives rise to metacognition capabilities and use this understanding to advance AI’s capabilities. I am pursuing projects in intuitive physics, causal learning, vision systems, and LLMs.
-            </p>
-        <section>
-            <h2>Papers</h2>
-            <div class="paper">
-                <h3>Development of a Python-Based Software for Calculating the Jones Polynomial: Insights into the Behavior of Polymers and Biopolymers</h3>
-                <p>Honors Thesis</p>
-                <p>Director: Dr. Eleni Panagiotou | Committee Member: Dr. Andrea Richa</p>
-                <p><a href="https://arxiv.org/abs/2410.22652" target="_blank">arXiv:2410.22652</a></p>
-            </div>
-        </section>
-
-        <section>
-            <h2>Presentations</h2>
-            <div class="presentation">
-                <h3>PTSD severity predicts improvements in psychological functioning after MDMA-assisted therapy</h3>
-                <p>Lifshitz, D., Balducci, J., Musfeldt, C., et al. (2024)</p>
-                <p> 2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ </p>
-                <p class="award">Award: Most Interdisciplinary Research</p>
-            </div>
-
-            <div class="presentation">
-                <h3>The "High" road to drug education through social media</h3>
-                <p>Delight, C., Semple, M. G., Algibez Flores, B., et al. (2024)</p>
-                <p> 2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ </p>
-                <p class="award">Award: Second Prize - Biology and Social Issues Category</p>
-                <p class="award">Award: Poster Title Award</p>
-            </div>
-
-            <div class="presentation">
-                <h3>PTSD severity predicts improvements in self-compassion scores following MDMA-assisted therapy</h3>
-                <p>Gupta, L., Semple, M. G., Algibez Flores, B., et al. (2024)</p>
-                <p> 2024 Arizona Psychology Undergraduate Research Conference, Tempe, AZ </p>
-                <p class="award">Award: Third Prize - Neuroscience Category</p>
-            </div>
-        </section>
+        <p>I am currently working in the Cognitive Data Science Lab under Dr. Derek Powell where my research focuses on understanding and improving the reasoning processes of large language models (LLMs) by examining representations and taxonomic relationships...</p>
+      </main>
     </div>
+  </div>
 
-    <div class="footer">
-        <button onclick="window.location.href='index.html'" class="menu-item">Home</button>
-        <button onclick="window.location.href='about.html'" class="menu-item">About</button>
-        <button onclick="window.location.href='art.html'" class="menu-item">Art</button>
-        <a href="https://github.com/CalebMus" target="_blank" class="menu-item">GitHub</a>
-        <button onclick="window.location.href='contact.html'" class="menu-item">Contact</button>
+  <nav class="bottom-menu" aria-label="Site menu">
+    <div class="bar">
+      <ul id="researchMenu" tabindex="0" aria-live="polite"></ul>
     </div>
+  </nav>
 
+  <div class="touchbar" aria-hidden="false">
+    <div class="left" role="button" aria-label="Previous"></div>
+    <div class="middle" role="button" aria-label="Enter"></div>
+    <div class="right" role="button" aria-label="Next"></div>
+  </div>
+
+  <script>
+    const MENU_ITEMS = [
+      { label: "Home", href: "index.html" },
+      { label: "About", href: "about.html" },
+      { label: "Art", href: "art.html" },
+      { label: "GitHub", href: "https://github.com/CalebMus", external: true },
+      { label: "Contact", href: "contact.html" }
+    ];
+
+    const menuEl = document.getElementById('researchMenu');
+    let menuIndex = 0;
+
+    function renderMenu(){
+      menuEl.innerHTML = '';
+      MENU_ITEMS.forEach((item,i)=>{
+        const li = document.createElement('li');
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.style.visibility = (i===menuIndex ? 'visible' : 'hidden');
+        li.appendChild(cursor);
+        li.appendChild(document.createTextNode(item.label));
+        li.setAttribute('aria-current', i===menuIndex);
+        menuEl.appendChild(li);
+      });
+    }
+
+    function nav(delta){
+      menuIndex = (menuIndex + delta + MENU_ITEMS.length) % MENU_ITEMS.length;
+      renderMenu();
+    }
+
+    function act(){
+      const item = MENU_ITEMS[menuIndex];
+      if(item.external) window.open(item.href,'_blank','noopener');
+      else window.location.href = item.href;
+    }
+
+    document.addEventListener('keydown', (e)=>{
+      switch(e.key){
+        case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); nav(-1); break;
+        case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nav(1); break;
+        case 'Enter': e.preventDefault(); act(); break;
+      }
+    });
+
+    const addTap = (selector, handler)=>{
+      const el = document.querySelector(selector);
+      if(!el) return;
+      const fn = (ev)=>{ ev.preventDefault(); handler(); };
+      el.addEventListener('touchstart', fn, {passive:false});
+      el.addEventListener('click', fn);
+    };
+    addTap('.touchbar .left', ()=>nav(-1));
+    addTap('.touchbar .right', ()=>nav(1));
+    addTap('.touchbar .middle', ()=>act());
+
+    renderMenu();
+    if(menuEl) menuEl.focus();
+  </script>
 </body>
 </html>
