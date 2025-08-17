@@ -2,115 +2,239 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About – Caleb Müsfeldt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>About — Caleb Müsfeldt</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
-    :root{ --blue:#003bff; --cyan:#66e4ff; --yellow:#ffc800; }
-    html,body{height:100%;margin:0;background:var(--blue);overflow-x:hidden;color:var(--cyan);} 
+    :root{
+      --blue:#222222;
+      --cyan:#003cff;
+      --yellow:#b22cff;
+    }
+    html,body{height:100%;margin:0;padding:0;background:var(--blue);overflow:hidden;position:fixed;width:100%;} /* Ensure full coverage */
 
-    .screen{position:fixed;inset:0;overflow:auto;filter:blur(1px) contrast(1.05) saturate(1.1);} 
+    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(1.5px) contrast(1.2) saturate(1.5);} /* low-res CRT blur */
 
-    .wrap{position:relative;z-index:1;display:flex;justify-content:flex-start}
-    .content{max-width:900px;padding:6rem 5% 12rem 5%;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase}
+    /* Pixelated CRT overlay */
+    .crt{position:absolute;inset:0;pointer-events:none;z-index:5;}
+    .crt::before{
+      content:"";position:absolute;inset:0;
+      background:repeating-linear-gradient(to bottom,
+        rgba(0,0,0,0.12) 0px,
+        rgba(0,0,0,0.12) 2px,
+        rgba(255,255,255,0.06) 3px,
+        rgba(255,255,255,0.06) 4px);
+      opacity:.55;mix-blend-mode:multiply;animation:rows 9s linear infinite;
+    }
+    .crt::after{
+      content:"";position:absolute;inset:-10%;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .05 .12 .08"/></feComponentTransfer></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+      opacity:.45;mix-blend-mode:soft-light;animation:grain 3s steps(5,end) infinite;
+      box-shadow: inset 140px 0 180px rgba(0,0,0,.25), inset -140px 0 180px rgba(0,0,0,.25);
+    }
+    @keyframes grain{from{transform:translate(-2%,-2%);} to{transform:translate(2%,2%);} }
+    @keyframes rows{0%{transform:translateY(-1%);}100%{transform:translateY(1%);} }
 
-    h1,h2,p{margin:0 0 1rem 0;font-size:clamp(16px,2.6vw,22px);color:inherit;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,2px 2px 1px rgba(0,0,0,.6)} 
+    .menu{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;padding-left:5%;font-family:"VCR OSD Mono","VT323",monospace;letter-spacing:2px;user-select:none;text-align:left;z-index:10;}
 
-    .bottom-menu{position:fixed;left:0;right:0;bottom:0;z-index:10;filter:blur(1px) contrast(1.05) saturate(1.1);}
-    .bottom-menu .bar{position:relative;padding:.4rem .8rem;border-top:2px solid rgba(255,255,255,.25);background:linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,20,.45));box-shadow:0 -12px 28px rgba(0,0,0,.45), inset 0 4px 0 rgba(0,0,0,.35);} 
-    .bottom-menu ul{display:flex;gap:1.2rem;align-items:center;justify-content:center;list-style:none;margin:0;padding:0;font-family:"VCR OSD Mono","VT323",monospace;text-transform:uppercase;font-size:clamp(14px,2.6vw,20px);line-height:1.2}
-    .bottom-menu li{color:var(--cyan);white-space:pre;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
-    .bottom-menu li[aria-current="true"]{color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 0 10px rgba(255,200,0,.3)}
-    .bottom-menu .cursor{display:inline-block;width:1ch;margin-right:.4ch;color:var(--yellow);text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
-    .bottom-menu .cursor::before{content:">"}
-    .bottom-menu [tabindex]{outline:none}
+    ul{list-style:none;padding:0;margin:0;font-size:clamp(40px, 7.8vw, 82px);line-height:1.2;text-transform:uppercase;}
+    
+    /* Header styling - same size as content but green */
+    .header{
+      font-size:clamp(14px, 2.8vw, 24px);
+      color:rgb(4, 255, 0);
+      text-transform:uppercase;
+      line-height:1.4;
+      margin-bottom:1rem;
+      margin-left: -1ch; /* Remove the cursor space indent */
+    }
+    li{
+      color:var(--cyan);
+      white-space:pre;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    }
+    li[aria-current="true"]{
+      color:var(--yellow);
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0 0 10px rgba(255,200,0,.3),
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    }
 
-    .touchbar{position:fixed;left:0;right:0;bottom:0;height:28%;z-index:15;display:flex;}
-    .touchbar div{flex:1 1 0;background:transparent}
+    .cursor{
+      display:inline-block;
+      width:1ch;
+      margin-right:.4ch;
+      color:var(--yellow);
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         2px  2px 1px rgba(0,0,0,0.7),
+         3px  3px 1px rgba(0,0,0,0.5);
+    } 
+    .cursor::before{content:">";} 
+
+    #menuList:focus, *:focus{outline:none;}
+
+    /* Touch controls */
+    .touch{position:absolute;left:0;width:100%;z-index:15;}
+    .touch.up{top:0;height:34%;}
+    .touch.enter{top:34%;height:32%;}
+    .touch.down{bottom:0;height:34%;}
+    .touch{background:transparent;}
     @media (pointer: coarse){
-      .touchbar div::after{content:attr(data-label);position:absolute;bottom:calc(28% + 0.6rem);left:50%;transform:translateX(-50%);font-family:"VT323",monospace;font-size:clamp(12px,3vw,16px);color:rgba(255,255,255,.45)}
-      .touchbar .left::after{content:"PREV"}
-      .touchbar .middle::after{content:"ENTER"}
-      .touchbar .right::after{content:"NEXT"}
+      .touch::after{content:attr(data-label); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:"VT323", monospace; font-size:clamp(14px,3.5vw,22px); color:rgba(255,255,255,.5);} 
+      .touch.up::after{content:"UP";}
+      .touch.enter::after{content:"ENTER";}
+      .touch.down::after{content:"DOWN";}
+    }
+
+    /* Info box */
+    .info-box{
+      position:absolute;
+      bottom:1rem;
+      right:1rem;
+      background:rgb(0, 0, 0);
+      border:4px solid rgb(4, 255, 0);
+      padding:0.7rem 1.4rem;
+      font-family:"VCR OSD Mono","VT323",monospace;
+      color:rgb(255, 255, 255);
+      font-size:clamp(18px,2.4vw,28px);
+      text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;
+      z-index:20;
+    }
+
+    /* Content styling */
+    .content{
+      color:var(--cyan);
+      font-size:clamp(14px, 2.8vw, 24px);
+      line-height:1.4;
+      text-transform:none;
+      margin-top:1.5rem;
+      max-width:90%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* Ensure canvas fills entire screen */
+    #crtCanvas {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 10;
+      pointer-events: none;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="screen">
-    <div class="wrap">
-      <main class="content">
-        <h1>About</h1>
-        <p>I am 23 years old by way of Phoenix, Arizona. Some random things I enjoy talking about (besides what you’ll find on this website) are consciousness, Albert Camus/absurdism, and the Phoenix Suns.</p>
-
-        <h2>Scientific Philosophy</h2>
-        <p>This should and will evolve as I continue to learn and develop my skills. Currently, and without discussing my specific work, it is rooted in a synthesis of curiosity, pragmatism, and a desire for transformative impact. I approach science as a means of uncovering the "how" and "why" behind complex systems, with a deep respect for knowledge as an intrinsic good. I dislike rigid disciplinary boundaries and believe breakthroughs emerge at the intersections of fields and thoughts. Curiosity should be expansive, but balanced by pragmatic optimism, as science pursues actionable goals with real-world constraints in mind. I believe science should be driven by a child-like wonder, guided by the maturity and rigor of sophisticated methods. And open science is the best!</p>
-
-        <h2>Artistic Philosophy</h2>
-        <p>Art is everything science is not, the best art inspires the best science (with room for the reverse to be true as well).</p>
-      </main>
+  <div class="screen" role="application" aria-label="About page">
+    <div class="menu">
+      <ul id="menuList" tabindex="0" aria-live="polite"></ul>
     </div>
-      <div class="middle" role="button" aria-label="Enter"></div>
-      <div class="right" role="button" aria-label="Next"></div>
-    </div>
+    <div class="touch up" role="button" aria-label="Up"></div>
+    <div class="touch enter" role="button" aria-label="Enter"></div>
+    <div class="touch down" role="button" aria-label="Down"></div>
+    <div class="info-box">Press H to go home</div>
+    <div class="crt" aria-hidden="true"></div>
   </div>
-
-  <!-- Fixed bottom CRT menu (outside blurred .screen so it stays pinned) -->
-  <nav class="bottom-menu" aria-label="Site menu">
-    <div class="bar">
-      <ul id="aboutMenu" tabindex="0" aria-live="polite"></ul>
-    </div>
-  </nav>
-
-  <!-- Fixed touch navigation for mobile -->
-  <div class="touchbar" aria-hidden="false">
-    <div class="left" role="button" aria-label="Previous"></div>
-    <div class="middle" role="button" aria-label="Enter"></div>
-    <div class="right" role="button" aria-label="Next"></div>
-  </div>
-
+  <canvas id="crtCanvas"></canvas>
   <script>
-    const ABOUT_ITEMS = [
-      { label: "Home", href: "index.html" },
-      { label: "Research", href: "research.html" },
-      { label: "Art", href: "art.html" },
-      { label: "GitHub", href: "https://github.com/CalebMus", external: true },
-      { label: "Contact", href: "contact.html" }
+    const ITEMS = [
+      { label: "ABOUT", static: true },
+      { 
+        label: `I am 23 years old by way of Phoenix, Arizona. Regarding creating, I primarily enjoy my research, writing, and interactive art. Regarding consuming, I primarily enjoy reading, listening to music, and nature.
+
+The following are things I enjoy (subject to change, no particular order):
+
+Phoenix Suns
+Duino Elegies by Rainer Maria Rilke
+The Legend of Zelda: Twilight Princess
+Post-punk, electroclash, neo-psychedelia, and hypnagogic pop
+Pure Heroine by Lorde
+The temperature range of 45-70 degrees F (~7–21 C)
+Arizona, U.S.A.
+The sublime
+Nathan Fielder
+Metaphors`, 
+        content: true 
+      }
     ];
 
-    const menuEl = document.getElementById('aboutMenu');
-    let menuIndex = 0;
+    const ul = document.getElementById('menuList');
+    let index = 1;
 
-    function renderMenu(){
-      if(!menuEl) return;
-      menuEl.innerHTML = '';
-      ABOUT_ITEMS.forEach((item,i)=>{
-        const li = document.createElement('li');
-        const cursor = document.createElement('span');
-        cursor.className = 'cursor';
-        cursor.style.visibility = (i===menuIndex ? 'visible' : 'hidden');
-        li.appendChild(cursor);
-        li.appendChild(document.createTextNode(item.label));
-        li.setAttribute('aria-current', i===menuIndex);
-        menuEl.appendChild(li);
+    function render(){
+      ul.innerHTML = "";
+      ITEMS.forEach((item,i)=>{
+        const li=document.createElement('li');
+        if(item.static){
+          const cursor=document.createElement('span');
+          cursor.className='cursor';
+          cursor.style.visibility='hidden';
+          li.appendChild(cursor);
+          li.appendChild(document.createTextNode(item.label));
+          li.className = 'header'; // Apply header styling
+        }else if(item.content){
+          // Don't add cursor for content, just add the text directly
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'content';
+          contentDiv.textContent = item.label;
+          li.appendChild(contentDiv);
+        }else{
+          li.setAttribute('aria-current', i===index);
+          const cursor=document.createElement('span');
+          cursor.className='cursor';
+          cursor.style.visibility = i===index ? 'visible' : 'hidden';
+          li.appendChild(cursor);
+          li.appendChild(document.createTextNode(item.label));
+        }
+        ul.appendChild(li);
       });
     }
 
-    function nav(delta){
-      menuIndex = ((menuIndex + delta + ABOUT_ITEMS.length) % ABOUT_ITEMS.length);
-      renderMenu();
+    function navigate(delta){
+      const navigableItems = ITEMS.filter((item, i) => !item.static && !item.content);
+      if(navigableItems.length === 0) return;
+      
+      let currentNavIndex = navigableItems.findIndex((item, navIndex) => {
+        return ITEMS.findIndex(originalItem => originalItem === item) === index;
+      });
+      
+      currentNavIndex = ((currentNavIndex + delta + navigableItems.length) % navigableItems.length);
+      index = ITEMS.findIndex(item => item === navigableItems[currentNavIndex]);
+      render();
     }
 
-    function act(){
-      const item = ABOUT_ITEMS[menuIndex];
-      if(item.external) window.open(item.href,'_blank','noopener');
-      else window.location.href = item.href;
+    function activate(){
+      // No activation needed for about page content
     }
 
-    document.addEventListener('keydown', (e)=>{
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('keydown', e=>{
       switch(e.key){
-        case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); nav(-1); break;
-        case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nav(1); break;
-        case 'Enter': e.preventDefault(); act(); break;
+        case 'ArrowUp': e.preventDefault(); navigate(-1); break;
+        case 'ArrowDown': e.preventDefault(); navigate(1); break;
+        case 'Enter': e.preventDefault(); activate(); break;
+        case 'h': case 'H': e.preventDefault(); goHome(); break;
       }
     });
 
@@ -121,12 +245,236 @@
       el.addEventListener('touchstart', fn, {passive:false});
       el.addEventListener('click', fn);
     };
-    addTap('.touchbar .left', ()=>nav(-1));
-    addTap('.touchbar .right', ()=>nav(1));
-    addTap('.touchbar .middle', ()=>act());
+    addTap('.touch.up', ()=>navigate(-1));
+    addTap('.touch.down', ()=>navigate(1));
+    addTap('.touch.enter', ()=>activate());
 
-    renderMenu();
-    if(menuEl) menuEl.focus();
+    render();
+    ul.focus();
   </script>
+
+  <script>
+  // Enhanced CRT post-process with improved glow and bleed effects
+  (function(){
+    const root = document.body;
+    const cvs = document.getElementById('crtCanvas');
+    const gl = cvs.getContext('webgl', {premultipliedAlpha:false, antialias:false});
+    if(!gl) return;
+
+    function resize(){
+      const dpr = Math.min(window.devicePixelRatio||1, 2);
+      cvs.width = window.innerWidth * dpr;
+      cvs.height = window.innerHeight * dpr;
+      cvs.style.width = '100vw';
+      cvs.style.height = '100vh';
+      cvs.style.position = 'fixed';
+      cvs.style.top = '0';
+      cvs.style.left = '0';
+      gl.viewport(0, 0, cvs.width, cvs.height);
+    }
+    addEventListener('resize', resize, {passive:true});
+    resize();
+
+    // Enhanced shader with improved glow and bleeding
+    const vsSrc = 'attribute vec2 a; varying vec2 v; void main(){ v = (a+1.0)*0.5; gl_Position = vec4(a,0.0,1.0);}';
+    const fsSrc = `
+    precision mediump float;
+    varying vec2 v;
+    uniform sampler2D uTex;
+    uniform vec2 uRes;
+    uniform float uIntensity;
+    uniform float uBrightness;
+    uniform float uVibrance;
+    uniform float uRedBoost;
+    uniform float uGreenBoost;
+    uniform float uBlueBoost;
+    
+    // Enhanced rounded rectangle with softer edges for more glow
+    float roundedRect(in vec2 st, vec2 size, vec2 softness){
+      size = (vec2(1.0)-size)*0.5;
+      float p=1.0;
+      p *= smoothstep(size.y, size.y+softness.y, st.y);
+      p *= smoothstep(size.x, size.x+softness.x, st.x);
+      p *= smoothstep(size.y, size.y+softness.y, 1.0-st.y);
+      p *= smoothstep(size.x, size.x+softness.x, 1.0-st.x);
+      return p;
+    }
+    
+    // Gaussian-like falloff for glow effect
+    float glowFalloff(float dist, float intensity) {
+      return exp(-dist * dist * intensity);
+    }
+    
+    // Vibrance adjustment function
+    vec3 adjustVibrance(vec3 color, float vibrance) {
+      float maxChannel = max(max(color.r, color.g), color.b);
+      float minChannel = min(min(color.r, color.g), color.b);
+      float saturation = maxChannel - minChannel;
+      return mix(vec3(dot(color, vec3(0.299, 0.587, 0.114))), color, vibrance * (1.0 + saturation));
+    }
+    
+    vec3 pixelUnit(in vec2 st, in vec2 sampleCoord){
+      vec3 color = vec3(0.0);
+      vec3 texSample = texture2D(uTex, sampleCoord).rgb;
+      
+      // Apply individual channel boosts
+      texSample.r *= uRedBoost;
+      texSample.g *= uGreenBoost;
+      texSample.b *= uBlueBoost;
+      
+      // Apply vibrance adjustment
+      texSample = adjustVibrance(texSample, uVibrance);
+      
+      // Main phosphor cells - slightly larger and softer
+      vec2 size = vec2(0.75, 0.88);
+      vec2 softness = vec2(0.45, 0.25);
+      
+      // RGB subpixel positions
+      float rPos = st.x * 3.0;
+      float gPos = (st.x - 0.3333) * 3.0;
+      float bPos = (st.x - 0.6666) * 3.0;
+      
+      // Main phosphor contribution with brightness boost
+      color += texSample.r * vec3(1.,0.,0.) * roundedRect(vec2(rPos, st.y), size, softness) * uBrightness;
+      color += texSample.g * vec3(0.,1.,0.) * roundedRect(vec2(gPos, st.y), size, softness) * uBrightness;
+      color += texSample.b * vec3(0.,0.,1.) * roundedRect(vec2(bPos, st.y), size, softness) * uBrightness;
+      
+      // Enhanced glow/bleed effect
+      float glowIntensity = 10.0;
+      float glowRadius = 0.4;
+      
+      // Calculate glow contributions from neighboring cells
+      for(float i = -1.0; i <= 1.0; i += 1.0) {
+        for(float j = -1.0; j <= 1.0; j += 1.0) {
+          if(i == 0.0 && j == 0.0) continue; // Skip center cell
+          
+          vec2 neighborPos = vec2(rPos + i, st.y + j);
+          float dist = length(vec2(i * 0.33, j));
+          float glow = glowFalloff(dist / glowRadius, glowIntensity);
+          
+          // Red glow with brightness
+          if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
+            color += texSample.r * vec3(1.,0.2,0.1) * glow * 0.3 * uBrightness;
+          }
+          
+          // Green glow with brightness
+          neighborPos = vec2(gPos + i, st.y + j);
+          if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
+            color += texSample.g * vec3(0.1,1.,0.2) * glow * 0.3 * uBrightness;
+          }
+          
+          // Blue glow with brightness
+          neighborPos = vec2(bPos + i, st.y + j);
+          if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
+            color += texSample.b * vec3(0.1,0.2,1.) * glow * 0.3 * uBrightness;
+          }
+        }
+      }
+      
+      // Additional ambient glow based on overall brightness
+      float brightness = dot(texSample, vec3(0.299, 0.587, 0.114));
+      color += texSample * brightness * 0.35 * uBrightness;
+      
+      return color;
+    }
+    
+    void main(){
+      vec2 sampleCoord = v * uRes;
+      sampleCoord.y -= step(1.0, mod(sampleCoord.x, 2.0)) * 0.5;
+      vec2 offsetUV = fract(sampleCoord);
+      sampleCoord = (floor(sampleCoord) + 0.5) / uRes;
+      vec3 color = pixelUnit(offsetUV, sampleCoord) * uIntensity;
+      
+      // Subtle bloom effect
+      color = mix(color, color * color, 0.1);
+      
+      gl_FragColor = vec4(color, 1.0);
+    }`;
+
+    function shader(type, src){
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src); gl.compileShader(s);
+      if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)){ console.warn(gl.getShaderInfoLog(s)); }
+      return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, shader(gl.VERTEX_SHADER, vsSrc));
+    gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, fsSrc));
+    gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){ console.warn(gl.getProgramInfoLog(prog)); }
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog,'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+    const uTex = gl.getUniformLocation(prog,'uTex');
+    const uRes = gl.getUniformLocation(prog,'uRes');
+    const uIntensity = gl.getUniformLocation(prog,'uIntensity');
+    const uBrightness = gl.getUniformLocation(prog,'uBrightness');
+    const uVibrance = gl.getUniformLocation(prog,'uVibrance');
+    const uRedBoost = gl.getUniformLocation(prog,'uRedBoost');
+    const uGreenBoost = gl.getUniformLocation(prog,'uGreenBoost');
+    const uBlueBoost = gl.getUniformLocation(prog,'uBlueBoost');
+    
+    gl.uniform1i(uTex,0);
+    // BRIGHTNESS & VIBRANCE CONTROLS - Adjust these values!
+    gl.uniform1f(uIntensity, 1.65);    // Overall intensity (0.5 = dim, 2.0 = very bright)
+    gl.uniform1f(uBrightness, 1.5);  // Global brightness multiplier (0.5 = dark, 2.0 = bright)
+    gl.uniform1f(uVibrance, 1.5);    // Color saturation boost (1.0 = normal, 2.0 = very vibrant)
+    gl.uniform1f(uRedBoost, 1.0);    // Individual red channel boost (0.5 = dim red, 1.5 = bright red)
+    gl.uniform1f(uGreenBoost, 1.0);  // Individual green channel boost
+    gl.uniform1f(uBlueBoost, 1.0);   // Individual blue channel boost
+
+    const srcCanvas = document.createElement('canvas');
+    const sctx = srcCanvas.getContext('2d', {alpha:false});
+    function sizeSource(){
+      srcCanvas.width = Math.max(2, window.innerWidth);
+      srcCanvas.height = Math.max(2, window.innerHeight);
+    }
+    sizeSource(); addEventListener('resize', sizeSource, {passive:true});
+
+    async function snapshot(){
+      const xml = new XMLSerializer().serializeToString(document.documentElement);
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${srcCanvas.width}' height='${srcCanvas.height}'>
+        <foreignObject width='100%' height='100%' transform='scale(${srcCanvas.width/window.innerWidth} ${srcCanvas.height/window.innerHeight})'>
+        ${xml}
+        </foreignObject></svg>`;
+      const img = new Image();
+      img.decoding='async';
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      await img.decode().catch(()=>{});
+      sctx.clearRect(0,0,srcCanvas.width,srcCanvas.height);
+      sctx.drawImage(img, 0, 0, srcCanvas.width, srcCanvas.height);
+    }
+
+    const tex = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    let last = 0;
+    function frame(t){
+      requestAnimationFrame(frame);
+      if(t - last > 120){
+        last = t;
+        snapshot().then(()=>{
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+          gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,srcCanvas);
+          gl.uniform2f(uRes, srcCanvas.width/2.5, srcCanvas.height/2.5); // Adjusted phosphor density for better glow
+        });
+      }
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    requestAnimationFrame(frame);
+  })();
+  </script>
+
 </body>
 </html>
