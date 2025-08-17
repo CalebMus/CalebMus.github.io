@@ -11,11 +11,10 @@
       --cyan:#003cff;
       --yellow:#b22cff;
     }
-    html,body{height:100%;margin:0;padding:0;background:var(--blue);overflow:hidden;position:fixed;width:100%;} /* Ensure full coverage */
+    html,body{height:100%;margin:0;padding:0;background:var(--blue);overflow:hidden;position:fixed;width:100%;}
 
-    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(1.5px) contrast(1.2) saturate(1.5);} /* low-res CRT blur */
+    .screen{position:fixed;inset:0;width:100vw;height:100vh;background:var(--blue);overflow:hidden;filter:blur(1.5px) contrast(1.2) saturate(1.5);}
 
-    /* Pixelated CRT overlay */
     .crt{position:absolute;inset:0;pointer-events:none;z-index:5;}
     .crt::before{
       content:"";position:absolute;inset:0;
@@ -42,7 +41,6 @@
       width:100%;
     }
 
-    /* Header styling - same as about page */
     .header{
       font-size:clamp(14px, 2.8vw, 24px);
       color:rgb(4, 255, 0);
@@ -58,7 +56,6 @@
          3px  3px 1px rgba(0,0,0,0.5);
     }
 
-    /* Content styling */
     .content{
       color:var(--cyan);
       font-size:clamp(14px, 2.8vw, 24px);
@@ -101,7 +98,6 @@
       text-decoration:underline !important;
     }
 
-    /* Info box */
     .info-box{
       position:absolute;
       bottom:1rem;
@@ -116,7 +112,6 @@
       z-index:20;
     }
 
-    /* Ensure canvas fills entire screen */
     #crtCanvas {
       position: fixed !important;
       top: 0 !important;
@@ -163,7 +158,6 @@
   </script>
 
   <script>
-  // Enhanced CRT post-process with improved glow and bleed effects
   (function(){
     const root = document.body;
     const cvs = document.getElementById('crtCanvas');
@@ -184,7 +178,6 @@
     addEventListener('resize', resize, {passive:true});
     resize();
 
-    // Enhanced shader with improved glow and bleeding
     const vsSrc = 'attribute vec2 a; varying vec2 v; void main(){ v = (a+1.0)*0.5; gl_Position = vec4(a,0.0,1.0);}';
     const fsSrc = `
     precision mediump float;
@@ -198,7 +191,7 @@
     uniform float uGreenBoost;
     uniform float uBlueBoost;
     
-    // Enhanced rounded rectangle with softer edges for more glow
+    // rounded rectangle with softer edges for more glow
     float roundedRect(in vec2 st, vec2 size, vec2 softness){
       size = (vec2(1.0)-size)*0.5;
       float p=1.0;
@@ -209,12 +202,12 @@
       return p;
     }
     
-    // Gaussian-like falloff for glow effect
+    // gaussian like falloff for glow effect
     float glowFalloff(float dist, float intensity) {
       return exp(-dist * dist * intensity);
     }
     
-    // Vibrance adjustment function
+    // vibrance adjustment function
     vec3 adjustVibrance(vec3 color, float vibrance) {
       float maxChannel = max(max(color.r, color.g), color.b);
       float minChannel = min(min(color.r, color.g), color.b);
@@ -226,33 +219,33 @@
       vec3 color = vec3(0.0);
       vec3 texSample = texture2D(uTex, sampleCoord).rgb;
       
-      // Apply individual channel boosts
+      // apply individual channel boosts
       texSample.r *= uRedBoost;
       texSample.g *= uGreenBoost;
       texSample.b *= uBlueBoost;
       
-      // Apply vibrance adjustment
+      // apply vibrance adjustment
       texSample = adjustVibrance(texSample, uVibrance);
       
-      // Main phosphor cells - slightly larger and softer
+      // main phosphor cells
       vec2 size = vec2(0.75, 0.88);
       vec2 softness = vec2(0.45, 0.25);
       
-      // RGB subpixel positions
+      // rgb subpixel positions
       float rPos = st.x * 3.0;
       float gPos = (st.x - 0.3333) * 3.0;
       float bPos = (st.x - 0.6666) * 3.0;
       
-      // Main phosphor contribution with brightness boost
+      // main phosphor contribution
       color += texSample.r * vec3(1.,0.,0.) * roundedRect(vec2(rPos, st.y), size, softness) * uBrightness;
       color += texSample.g * vec3(0.,1.,0.) * roundedRect(vec2(gPos, st.y), size, softness) * uBrightness;
       color += texSample.b * vec3(0.,0.,1.) * roundedRect(vec2(bPos, st.y), size, softness) * uBrightness;
       
-      // Enhanced glow/bleed effect
+      // enhanced glow/bleed effect
       float glowIntensity = 10.0;
       float glowRadius = 0.4;
       
-      // Calculate glow contributions from neighboring cells
+      // calculate glow contributions from neighboring cells
       for(float i = -1.0; i <= 1.0; i += 1.0) {
         for(float j = -1.0; j <= 1.0; j += 1.0) {
           if(i == 0.0 && j == 0.0) continue; // Skip center cell
@@ -261,18 +254,18 @@
           float dist = length(vec2(i * 0.33, j));
           float glow = glowFalloff(dist / glowRadius, glowIntensity);
           
-          // Red glow with brightness
+          // red glow
           if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
             color += texSample.r * vec3(1.,0.2,0.1) * glow * 0.3 * uBrightness;
           }
           
-          // Green glow with brightness
+          // breen glow
           neighborPos = vec2(gPos + i, st.y + j);
           if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
             color += texSample.g * vec3(0.1,1.,0.2) * glow * 0.3 * uBrightness;
           }
           
-          // Blue glow with brightness
+          //bBlue glow
           neighborPos = vec2(bPos + i, st.y + j);
           if(neighborPos.x >= -0.5 && neighborPos.x <= 3.5 && neighborPos.y >= -0.5 && neighborPos.y <= 1.5) {
             color += texSample.b * vec3(0.1,0.2,1.) * glow * 0.3 * uBrightness;
@@ -280,7 +273,7 @@
         }
       }
       
-      // Additional ambient glow based on overall brightness
+      // more glow
       float brightness = dot(texSample, vec3(0.299, 0.587, 0.114));
       color += texSample * brightness * 0.35 * uBrightness;
       
@@ -294,7 +287,7 @@
       sampleCoord = (floor(sampleCoord) + 0.5) / uRes;
       vec3 color = pixelUnit(offsetUV, sampleCoord) * uIntensity;
       
-      // Subtle bloom effect
+      // bloom
       color = mix(color, color * color, 0.1);
       
       gl_FragColor = vec4(color, 1.0);
@@ -329,13 +322,12 @@
     const uBlueBoost = gl.getUniformLocation(prog,'uBlueBoost');
     
     gl.uniform1i(uTex,0);
-    // BRIGHTNESS & VIBRANCE CONTROLS - Adjust these values!
-    gl.uniform1f(uIntensity, 1.65);    // Overall intensity (0.5 = dim, 2.0 = very bright)
-    gl.uniform1f(uBrightness, 1.5);  // Global brightness multiplier (0.5 = dark, 2.0 = bright)
-    gl.uniform1f(uVibrance, 1.5);    // Color saturation boost (1.0 = normal, 2.0 = very vibrant)
-    gl.uniform1f(uRedBoost, 1.0);    // Individual red channel boost (0.5 = dim red, 1.5 = bright red)
-    gl.uniform1f(uGreenBoost, 1.0);  // Individual green channel boost
-    gl.uniform1f(uBlueBoost, 1.0);   // Individual blue channel boost
+    gl.uniform1f(uIntensity, 1.65);
+    gl.uniform1f(uBrightness, 1.5);
+    gl.uniform1f(uVibrance, 1.5);
+    gl.uniform1f(uRedBoost, 1.0);
+    gl.uniform1f(uGreenBoost, 1.0);
+    gl.uniform1f(uBlueBoost, 1.0);
 
     const srcCanvas = document.createElement('canvas');
     const sctx = srcCanvas.getContext('2d', {alpha:false});
@@ -376,7 +368,7 @@
           gl.bindTexture(gl.TEXTURE_2D, tex);
           gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
           gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,srcCanvas);
-          gl.uniform2f(uRes, srcCanvas.width/2.5, srcCanvas.height/2.5); // Adjusted phosphor density for better glow
+          gl.uniform2f(uRes, srcCanvas.width/2.5, srcCanvas.height/2.5);
         });
       }
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
